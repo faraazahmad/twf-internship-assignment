@@ -92,8 +92,8 @@
         <td>
             <code>
                 curl --request GET \<br>
-                --url http://twf-intern.herokuapp.com/solve \<br>
-                -d 'input=[2, 3, 0, 1, 0, 2, 0, 0, 0]'
+                <br>--url http://twf-intern.herokuapp.com/solve \<br>
+                <br>-d 'input=[2, 3, 0, 1, 0, 2, 0, 0, 0]'
             </code>
         </td>
     </tr>
@@ -169,7 +169,7 @@
         <td>
             <code>
                 curl --request GET \<br>
-                --url http://twf-intern.herokuapp.com/
+                <br>--url http://twf-intern.herokuapp.com/
             </code>
         </td>
     </tr>
