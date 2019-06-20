@@ -12,6 +12,12 @@ const distanceGraph = [
     [3, 2.5, 2, 0],
 ];
 
+const stockWeight = [
+    3, 2, 8,
+    12, 25, 15,
+    0.5, 1, 2,
+];
+
 function min(a: number, b: number): number {
     return (a < b) ? a : b;
 }
@@ -174,36 +180,35 @@ function three(weights: number[]): number {
 function start() {
     let input  = [1, 2, 0,  0, 0, 0,  0, 0, 0];
     let weights = [];
-    for (let i = 0; i < 9; i++) {
-        let sum = 0;
+    let sum = 0;
 
+    for (let i = 0; i < 9; i++) {
         if ((i + 1) % 3 == 0) {
             weights.push(sum);
             sum = 0;
         }
         else {
-            sum += input[i];
+            sum += input[i] * stockWeight[i];
         }
-    }
+    }    
 
     switch (getNumCenters(weights)) {
         case 1:
-            one(weights);
+            console.log(one(weights));
             break;
 
         case 2:
-            two(weights);
+            console.log(two(weights));
             break;
         
         case 3:
-            three(weights);
+            console.log(three(weights));
             break;
 
         default:
             console.log('Wrong input');
             break;
     }
-
 }
 
 start();
