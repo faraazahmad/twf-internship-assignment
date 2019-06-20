@@ -22,10 +22,12 @@ function min(a: number, b: number): number {
     return (a < b) ? a : b;
 }
 
+// check if weight is lower or greater than 5 kgs and give cost for trip
 function getCostPerUnit(weight: number): number {
     return (weight > 5) ? 8 : 10;
 }
 
+// check for number of centers in weights array (length 3)
 function getNumCenters(weights: number[]): number {
     let num = 0;
     weights.forEach(w => {
@@ -37,6 +39,7 @@ function getNumCenters(weights: number[]): number {
     return num;
 }
 
+// 
 function getWeightsSum(weights: number[], limit: number): number {
     let sum = 0;
     for (let i = 0; i < limit; i++) {
