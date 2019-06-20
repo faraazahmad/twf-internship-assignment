@@ -151,7 +151,7 @@
             <br>
             Code: 200
             <br>
-            Content: <i>none</i>
+            Content: <i>"hello world"</i>
         </td>
     </tr>
     <tr>
