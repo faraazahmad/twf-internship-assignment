@@ -22,6 +22,7 @@ const distanceGraph = [
     [3, 2.5, 2, 0],
 ];
 
+// Choice: Ci -> L1
 function one(weights: number[]): number {
     // get center
     let center;
@@ -32,13 +33,11 @@ function one(weights: number[]): number {
         }
     }
 
-    // return cost
-    if (weights[center] > 5) {
-        return distanceGraph[center][3] * 8;
-    }
-    else {
-        return distanceGraph[center][3] * 10;
-    }
+    return getCostPerUnit(weights[center]) * distanceGraph[center][3];
+}
+
+function getCostPerUnit(weight: number): number {
+    return (weight > 5) ? 8 : 10;
 }
 
 function two(weights: number[]): number {
@@ -63,15 +62,23 @@ function two(weights: number[]): number {
 
     for (let i = 0; i < 2; i++) {
         cost = 0;
-        cost += distanceGraph[centers[i]][centers[(i + 1) % 2]];
-        cost += distanceGraph[centers[(i + 1) % 2]][3];
+        cost += getCostPerUnit(weights[i]) * 
+                    distanceGraph[centers[i]][centers[(i + 1) % 2]];
+        
+        cost += getCostPerUnit(weights[i] + weights[i + 1]) * 
+                    distanceGraph[centers[(i + 1) % 2]][3];
         
         minCost = min(minCost, cost);
 
         cost = 0;
-        cost += distanceGraph[centers[i]][3];
-        cost += distanceGraph[3][centers[(i + 1) % 2]];
-        cost += distanceGraph[centers[(i + 1) % 2]][3];
+        cost += getCostPerUnit(weights[i]) *
+                     distanceGraph[centers[i]][3];
+        
+        cost += getCostPerUnit(0) *
+                    distanceGraph[3][centers[(i + 1) % 2]];
+        
+        cost += getCostPerUnit(weights[(i + 1) % 2]) *
+                    distanceGraph[centers[(i + 1) % 2]][3];
 
         minCost = min(minCost, cost);
     }
@@ -81,23 +88,6 @@ function two(weights: number[]): number {
 
 function three(weights: number[]) {
     
-}
-
-function floydWarshal(): number[][] {
-    let graph = distanceGraph;
-    let k: number,
-    i: number,
-    j : number;
-
-    for (k = 0; k < 4; k++) {
-        for (i = 0; i < 4; i++) {
-            for (j = 0; j < 4; j++) {
-                graph[i][j] = min(graph[i][k] + graph[k][j], graph[i][j]);
-            }
-        }
-    }
-
-    return graph;
 }
 
 function getNumCenters(weights: number[]): number {
