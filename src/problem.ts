@@ -62,7 +62,7 @@ function one(weights: number[]): number {
 
 function two(weights: number[]): number {
     // get centers
-    let centers: number[];
+    let centers: number[] = [];
     for (let i = 0; i < 3; i++) {
         if (weights[i] > 0) {
             centers.push(i);
