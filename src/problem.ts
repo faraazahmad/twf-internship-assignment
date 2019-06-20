@@ -177,8 +177,7 @@ function three(weights: number[]): number {
 }
 
 
-function start() {
-    let input  = [1, 2, 0,  0, 0, 0,  0, 0, 0];
+export function getSolution(input: number[]): number | Error {
     let weights = [];
     let sum = 0;
 
@@ -194,21 +193,15 @@ function start() {
 
     switch (getNumCenters(weights)) {
         case 1:
-            console.log(one(weights));
-            break;
+            return one(weights);
 
         case 2:
-            console.log(two(weights));
-            break;
+            return two(weights);
         
         case 3:
-            console.log(three(weights));
-            break;
+            return three(weights);
 
         default:
-            console.log('Wrong input');
-            break;
     }
+    return new Error('Wrong input');
 }
-
-start();

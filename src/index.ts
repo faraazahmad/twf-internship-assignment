@@ -1,7 +1,8 @@
 import express, { Response, Request, Application } from 'express';
-
 import bodyParser from 'body-parser';
-import { STATUS_CODES } from 'http';
+
+import { getSolution } from './problem';
+import { isError } from 'util';
 
 const app: Application = express();
 const port: number = 3000;
@@ -29,4 +30,11 @@ function problemController(req: Request, res: Response) {
         // send bad request
         return res.status(301).json('Input array should be of length 9');
     }
+
+    let result: number | Error = getSolution(inputArray);
+    if (isError(result)) {
+        return res.status(500).json(result.message);
+    }
+
+    return res.status(200).json(result);
 }
