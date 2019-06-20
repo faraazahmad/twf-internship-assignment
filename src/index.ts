@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({
     extended: false,
 }));
 
-
 app.get('/', indexController);
 app.post('/solve', problemController);
 
@@ -25,7 +24,15 @@ function indexController(req: Request, res: Response) {
 }
 
 function problemController(req: Request, res: Response) {
-    let inputArray: number[] = req.body.input;
+    let inputArray: number[] = [];
+    let inputArrayString: string = req.body.input;
+    
+    inputArrayString.substring(1, inputArrayString.length - 1)
+    .split(', ')
+    .map((char) => {
+        inputArray.push(Number(char));
+    });
+
     if (inputArray.length != 9) {
         // send bad request
         return res.status(301).json('Input array should be of length 9');
