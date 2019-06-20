@@ -8,7 +8,13 @@ function min(a: number, b: number): number {
     return (a < b) ? a : b;
 }
 
-// order = C1, C2, C3, L1
+/* 
+    order:  C1, C2, C3, L1
+            C1,
+            C2,
+            C3,
+            L1
+*/
 const distanceGraph = [
     [0, 4, Infinity, 3],
     [4, 2, 3, 2.5],
@@ -35,8 +41,42 @@ function one(weights: number[]): number {
     }
 }
 
-function two(weights: number[]) {
-    
+function two(weights: number[]): number {
+    // get centers
+    let centers: number[];
+    for (let i = 0; i < 3; i++) {
+        if (weights[i] > 0) {
+            centers.push(i);
+        }
+    }
+
+    /**
+     * Choices:
+     *  Ci -> Cj -> L1
+     *  Ci -> L1 -> Cj -> L1
+     * 
+     *  Cj -> Ci -> L1
+     *  Cj -> L1 -> Ci -> L1
+     */
+    let cost: number;
+    let minCost = Infinity;
+
+    for (let i = 0; i < 2; i++) {
+        cost = 0;
+        cost += distanceGraph[centers[i]][centers[(i + 1) % 2]];
+        cost += distanceGraph[centers[(i + 1) % 2]][3];
+        
+        minCost = min(minCost, cost);
+
+        cost = 0;
+        cost += distanceGraph[centers[i]][3];
+        cost += distanceGraph[3][centers[(i + 1) % 2]];
+        cost += distanceGraph[centers[(i + 1) % 2]][3];
+
+        minCost = min(minCost, cost);
+    }
+
+    return minCost;
 }
 
 function three(weights: number[]) {
