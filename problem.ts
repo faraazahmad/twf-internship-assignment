@@ -1,13 +1,3 @@
-/**
- * get input array
- * calculate cost per center ( put it in 3x1 array)
- * apply floyd-warshall from c1
-*/
-
-function min(a: number, b: number): number {
-    return (a < b) ? a : b;
-}
-
 /* 
     order:  C1, C2, C3, L1
             C1,
@@ -16,29 +6,53 @@ function min(a: number, b: number): number {
             L1
 */
 const distanceGraph = [
-    [0, 4, Infinity, 3],
+    [0, 4, 5, 3],
     [4, 2, 3, 2.5],
-    [Infinity, 3, 0, 2],
+    [5, 3, 0, 2],
     [3, 2.5, 2, 0],
 ];
 
-// Choice: Ci -> L1
-function one(weights: number[]): number {
-    // get center
-    let center;
-    for (let i = 0; i < 3; i++) {
-        if (weights[i] > 0) {
-            center = i;
-            break;
-        }
-    }
-
-    return getCostPerUnit(weights[center]) * distanceGraph[center][3];
+function min(a: number, b: number): number {
+    return (a < b) ? a : b;
 }
 
 function getCostPerUnit(weight: number): number {
     return (weight > 5) ? 8 : 10;
 }
+
+function getNumCenters(weights: number[]): number {
+    let num = 0;
+    weights.forEach(w => {
+        if (w > 0) {
+            num++;
+        }
+    });
+
+    return num;
+}
+
+function getWeightsSum(weights: number[], limit: number): number {
+    let sum = 0;
+    for (let i = 0; i < limit; i++) {
+        sum += weights[i];
+    }
+
+    return sum;
+}
+
+// Choice: Ci -> L1
+function one(weights: number[]): number {
+    // get center
+    let i;
+    for (i = 0; i < 3; i++) {
+        if (weights[i] > 0) {
+            break;
+        }
+    }
+
+    return getCostPerUnit(weights[i]) * distanceGraph[i][3];
+}
+
 
 function two(weights: number[]): number {
     // get centers
@@ -54,8 +68,7 @@ function two(weights: number[]): number {
      *  Ci -> Cj -> L1
      *  Ci -> L1 -> Cj -> L1
      * 
-     *  Cj -> Ci -> L1
-     *  Cj -> L1 -> Ci -> L1
+     *  (+ permutations of Ci and Cj interchanged)
      */
     let cost: number;
     let minCost = Infinity;
@@ -86,20 +99,77 @@ function two(weights: number[]): number {
     return minCost;
 }
 
-function three(weights: number[]) {
-    
+/**
+ * Choices:
+ * 
+ *  Ci -> Cj -> Ck -> L1
+ *  Ci -> Cj -> L1 -> Ck -> L1
+ *  Ci -> L1 -> Cj -> Ck -> L1
+ *  Ci -> L1 -> Cj -> L1 -> Ck -> L1
+ * 
+ *  (+ permutations of Ci, Cj, Ck interchanged)
+ */
+function three(weights: number[]): number {
+    let cost: number;
+    let minCost = Infinity;
+
+    for (let i = 0; i < 3; i++) {
+        // Ci -> Cj -> Ck -> L1
+        cost = 0;
+        cost += getCostPerUnit(getWeightsSum(weights, 1)) *
+                    distanceGraph[i][(i + 1) % 3];
+        cost += getCostPerUnit(getWeightsSum(weights, 2)) *
+                    distanceGraph[(i + 1) % 3][(i + 2) % 3];
+        cost += getCostPerUnit(getWeightsSum(weights, 3)) *
+                    distanceGraph[(i + 2) % 3][3];
+        
+        minCost = min(minCost, cost);
+
+        // Ci -> Cj -> L1 -> Ck -> L1
+        cost = 0;
+        cost += getCostPerUnit(weights[i]) *
+            distanceGraph[i][(i + 1) % 3];
+        cost += getCostPerUnit(getWeightsSum(weights, 2)) *
+            distanceGraph[(i + 1) % 3][3];
+        cost += getCostPerUnit(0) *
+                    distanceGraph[3][(i + 2) % 3];
+        cost += getCostPerUnit(weights[(i + 2) % 3]) *
+            distanceGraph[(i + 2) % 3][3];
+        
+        minCost = min(minCost, cost);
+
+        // Ci -> L1 -> Cj -> Ck -> L1
+        cost = 0;
+        cost += getCostPerUnit(weights[i]) *
+            distanceGraph[i][3];
+        cost += getCostPerUnit(0) *
+            distanceGraph[3][(i + 1) % 3];
+        cost += getCostPerUnit(weights[(i + 1) % 3]) *
+            distanceGraph[(i + 1) % 3][(i + 2) % 3];
+        cost += getCostPerUnit(weights[(i + 1) % 3] + weights[(i + 2) % 3]) *
+            distanceGraph[(i + 2) % 3][3];
+
+        minCost = min(minCost, cost);
+
+        // Ci -> L1 -> Cj -> L1 -> Ck -> L1
+        cost = 0;
+        cost += getCostPerUnit(weights[i]) *
+            distanceGraph[i][3];
+        cost += getCostPerUnit(0) *
+            distanceGraph[3][(i + 1) % 3];
+        cost += getCostPerUnit(weights[(i + 1) % 3]) *
+            distanceGraph[(i + 1) % 3][3];
+        cost += getCostPerUnit(0) *
+            distanceGraph[3][(i + 2) % 3];
+        cost += getCostPerUnit(weights[(i + 2) % 3]) *
+            distanceGraph[(i + 2) % 3][3];
+        
+        minCost = min(minCost, cost);
+    }
+
+    return minCost;
 }
 
-function getNumCenters(weights: number[]): number {
-    let num = 0;
-    weights.forEach(w => {
-        if (w > 0) {
-            num++;
-        }
-    });
-
-    return num;
-}
 
 function start() {
     let input  = [1, 2, 0,  0, 0, 0,  0, 0, 0];
