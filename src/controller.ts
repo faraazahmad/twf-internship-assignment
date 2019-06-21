@@ -3,7 +3,7 @@ import { getSolution } from './problem';
 import { isError } from 'util';
 
 export function indexController(req: Request, res: Response) {
-    res.status(200).json('hello world');
+    return res.status(200).json('hello world');
 }
 
 export function problemController(req: Request, res: Response) {
