@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import { router } from './router';
 
 const app: Application = express();
-const port: number = 3000;
+const port: number = Number(process.env.PORT) || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
